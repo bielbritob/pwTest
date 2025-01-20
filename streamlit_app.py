@@ -1,38 +1,31 @@
-import streamlit as st
 import subprocess
+import streamlit as st
+import os
 
-# Inicializa a variável de sessão
-if "first_run" not in st.session_state:
-    st.session_state.first_run = True
 
-st.title("🎈 My new app")
-inputext = st.text_input('Digite o produto:', placeholder='Ex. Leite integral...')
 
-if st.button('Pesquisar'):
-    with st.spinner('Pesquisando...'):
-        # Verifica se o usuário digitou um comando de instalação
-        if inputext.strip().lower().startswith("pip install"):
-            package = inputext.strip().lower().replace("pip install", "").strip()
-            if package in ["zendriver", "beautifulsoup4"]:  # Lista de pacotes permitidos
-                st.write(f"Instalando {package}...")
-                result = subprocess.run(['pip', 'install', package], capture_output=True, text=True)
-                if result.returncode == 0:
-                    st.success(f"{package} instalado com sucesso!")
-                    st.write(result.stdout)
-                else:
-                    st.error(f"Erro ao instalar {package}:")
-                    st.write(result.stderr)
-            else:
-                st.error(f"Pacote '{package}' não permitido ou não reconhecido.")
-        else:
-            # Define o argumento com base na primeira execução
-            select_city = st.session_state.first_run
-            subOS = subprocess.run(["python", "scrapData.py", inputext, str(select_city)], capture_output=True, text=True)
+# Configuração da interface do Streamlit
+st.set_page_config(page_title="PriceWise", page_icon="🛒", layout="centered")
 
-            # Atualiza o estado para False após a primeira execução
-            if st.session_state.first_run:
-                st.session_state.first_run = False
+# Título e barra de busca
+st.title(" 🛒  PriceWise - Comparador de Preços")
+product_name = st.text_input("Digite o produto que deseja pesquisar:",
+                             placeholder="Ex. leite integral, cafe 500g (seja específico para melhor busca)")
 
-            st.write(subOS.stdout)
-            if subOS.stderr:
-                st.error(subOS.stderr)
+
+
+# Iniciar busca
+if st.button("Pesquisar"):
+    with st.spinner("Pesquisando..."):
+        nah = subprocess.run(['python', 'scrapData.py'], capture_output=True)
+        st.write(f'output nah: {nah}')
+
+
+
+
+
+
+if st.button('install deps'):
+    os.system('pip install playwright')
+    os.system('playwright install')
+    os.system('playwright install-deps')
