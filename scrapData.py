@@ -79,7 +79,7 @@ async def main():
             else:
                 print('não deu boa! :(')
     #a = await page.query_selector('span[class="cursor-pointer"]')
-
+    #
 
 
     await browser.stop()
